@@ -8,20 +8,28 @@ Embedding 服务：把文本转成向量（语义检索的基础）
 - bge-small-zh-v1.5 是北京智源开源的中文模型，本地运行、免费、效果好
 
 工程细节：
+- 模型文件随项目存放（models/ 目录），离线可用，部署无需联网下载
 - 模型在首次调用时才加载（懒加载），避免服务启动变慢
-- 支持 HF_ENDPOINT 环境变量走国内镜像下载模型
 - encode 时对查询加 bge 要求的指令前缀，能提升检索效果
 """
-import os
+from pathlib import Path
 
 from app.core.config import settings
 
-# 国内网络环境优先走 HuggingFace 镜像（必须在 import 前设置）
-os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
+# 项目根目录（app/services/embedding.py 往上两级）
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 _model = None  # 模块级缓存：整个进程只加载一次模型
 
 _QUERY_INSTRUCTION = "为这个句子生成表示以用于检索相关文章："
+
+
+def _resolve_model_path() -> str:
+    """优先使用项目内本地模型；不存在时回退到 HuggingFace 在线加载"""
+    local = _PROJECT_ROOT / settings.embedding_model
+    if local.exists():
+        return str(local)
+    return settings.embedding_model
 
 
 def _get_model():
@@ -29,8 +37,9 @@ def _get_model():
     global _model
     if _model is None:
         from sentence_transformers import SentenceTransformer
-        print(f"[embedding] 正在加载模型 {settings.embedding_model}（首次加载需下载，请耐心等待）...")
-        _model = SentenceTransformer(settings.embedding_model)
+        model_path = _resolve_model_path()
+        print(f"[embedding] 正在加载模型 {model_path} ...")
+        _model = SentenceTransformer(model_path)
         print("[embedding] 模型加载完成")
     return _model
 

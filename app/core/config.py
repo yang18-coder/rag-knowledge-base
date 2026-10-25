@@ -12,7 +12,8 @@ class Settings(BaseSettings):
     llm_model: str = "deepseek-chat"
 
     # Embedding 模型（第 2 周使用，本地运行）
-    embedding_model: str = "BAAI/bge-small-zh-v1.5"
+    # 默认指向项目内 models/ 目录的本地模型（离线可用）
+    embedding_model: str = "models/bge-small-zh-v1.5"
 
     # 文本切分参数
     chunk_size: int = 500      # 每个文本块的目标长度（字符）

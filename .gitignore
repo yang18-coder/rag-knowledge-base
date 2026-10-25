@@ -10,8 +10,9 @@ venv/
 *.env
 
 # 数据与模型产物
-data/
+data/uploads/
 storage/
+models/
 *.db
 *.sqlite3
 
