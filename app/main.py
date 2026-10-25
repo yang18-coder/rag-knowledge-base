@@ -5,6 +5,8 @@ RAG 知识库问答系统 - 应用入口
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.documents import router as documents_router
+
 app = FastAPI(
     title="智能知识库问答系统 API",
     description="基于 RAG（检索增强生成）的文档问答服务",
@@ -18,6 +20,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 注册路由
+app.include_router(documents_router)
 
 
 @app.get("/")
