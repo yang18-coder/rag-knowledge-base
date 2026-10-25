@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# 环境变量（绝不上传 API Key！）
+.env
+*.env
+
+# 数据与模型产物
+data/
+storage/
+*.db
+*.sqlite3
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
