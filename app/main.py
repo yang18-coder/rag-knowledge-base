@@ -5,6 +5,7 @@ RAG 知识库问答系统 - 应用入口
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.chat import router as chat_router
 from app.api.documents import router as documents_router
 
 app = FastAPI(
@@ -23,6 +24,7 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(documents_router)
+app.include_router(chat_router)
 
 
 @app.get("/")
